@@ -108,91 +108,173 @@ Following is the skeleton code for our parking lot system:
 
 **Enums and Constants:** Here are the required enums, data types, and constants:
 
-```python
-from enum import Enum
+```java
+public enum VehicleType {
+    CAR(1),
+    TRUCK(2),
+    ELECTRIC(3),
+    VAN(4),
+    MOTORBIKE(5);
 
+    private final int value;
 
-class VehicleType(Enum):
-    CAR, TRUCK, ELECTRIC, VAN, MOTORBIKE = 1, 2, 3, 4, 5
+    VehicleType(int value) {
+        this.value = value;
+    }
 
+    public int getValue() {
+        return value;
+    }
+}
 
-class ParkingSpotType(Enum):
-    HANDICAPPED, COMPACT, LARGE, MOTORBIKE, ELECTRIC = 1, 2, 3, 4, 5
+public enum ParkingSpotType {
+    HANDICAPPED(1),
+    COMPACT(2),
+    LARGE(3),
+    MOTORBIKE(4),
+    ELECTRIC(5);
 
+    private final int value;
 
-class AccountStatus(Enum):
-    ACTIVE, BLOCKED, BANNED, COMPROMISED, ARCHIVED, UNKNOWN = 1, 2, 3, 4, 5, 6
+    ParkingSpotType(int value) {
+        this.value = value;
+    }
 
+    public int getValue() {
+        return value;
+    }
+}
 
-class ParkingTicketStatus(Enum):
-    ACTIVE, PAID, LOST = 1, 2, 3
+public enum AccountStatus {
+    ACTIVE(1),
+    BLOCKED(2),
+    BANNED(3),
+    COMPROMISED(4),
+    ARCHIVED(5),
+    UNKNOWN(6);
 
+    private final int value;
 
-class Address:
-    def __init__(self, street, city, state, zip_code, country):
-        self.__street_address = street
-        self.__city = city
-        self.__state = state
-        self.__zip_code = zip_code
-        self.__country = country
+    AccountStatus(int value) {
+        this.value = value;
+    }
 
+    public int getValue() {
+        return value;
+    }
+}
 
-class Person():
-    def __init__(self, name, address, email, phone):
-        self.__name = name
-        self.__address = address
-        self.__email = email
-        self.__phone = phone
+public enum ParkingTicketStatus {
+    ACTIVE(1),
+    PAID(2),
+    LOST(3);
+
+    private final int value;
+
+    ParkingTicketStatus(int value) {
+        this.value = value;
+    }
+
+    public int getValue() {
+        return value;
+    }
+}
+
+public class Address {
+    private String streetAddress;
+    private String city;
+    private String state;
+    private String zipCode;
+    private String country;
+
+    public Address(String street, String city, String state, String zipCode, String country) {
+        this.streetAddress = street;
+        this.city = city;
+        this.state = state;
+        this.zipCode = zipCode;
+        this.country = country;
+    }
+}
+
+public class Person {
+    private String name;
+    private Address address;
+    private String email;
+    private String phone;
+
+    public Person(String name, Address address, String email, String phone) {
+        this.name = name;
+        this.address = address;
+        this.email = email;
+        this.phone = phone;
+    }
+}
+
 
 
 ```
 
 **Account, Admin, and ParkingAttendant:** These classes represent various people that interact with our system:
 
-```python
-from .constants import *
+```java
+public class Account {
+    private String userName;
+    private String password;
+    private Person person;
+    private AccountStatus status;
 
+    public Account(String userName, String password, Person person, AccountStatus status) {
+        this.userName = userName;
+        this.password = password;
+        this.person = person;
+        this.status = status;
+    }
 
-class Account:
-    def __init__(self, user_name, password, person, status=AccountStatus.Active):
-        self.__user_name = user_name
-        self.__password = password
-        self.__person = person
-        self.__status = status
+    public void resetPassword() {
+        // Implementation for resetting password
+    }
+}
 
-    def reset_password(self):
-        None
+public class Admin extends Account {
+    public Admin(String userName, String password, Person person, AccountStatus status) {
+        super(userName, password, person, status);
+    }
 
+    public void addParkingFloor(String floor) {
+        // Implementation for adding parking floor
+    }
 
-class Admin(Account):
-    def __init__(self, user_name, password, person, status=AccountStatus.Active):
-        super().__init__(user_name, password, person, status)
+    public void addParkingSpot(String floorName, Spot spot) {
+        // Implementation for adding parking spot
+    }
 
-    def add_parking_floor(self, floor):
-        None
+    public void addParkingDisplayBoard(String floorName, DisplayBoard displayBoard) {
+        // Implementation for adding parking display board
+    }
 
-    def add_parking_spot(self, floor_name, spot):
-        None
+    public void addCustomerInfoPanel(String floorName, InfoPanel infoPanel) {
+        // Implementation for adding customer info panel
+    }
 
-    def add_parking_display_board(self, floor_name, display_board):
-        None
+    public void addEntrancePanel(EntrancePanel entrancePanel) {
+        // Implementation for adding entrance panel
+    }
 
-    def add_customer_info_panel(self, floor_name, info_panel):
-        None
+    public void addExitPanel(ExitPanel exitPanel) {
+        // Implementation for adding exit panel
+    }
+}
 
-    def add_entrance_panel(self, entrance_panel):
-        None
+public class ParkingAttendant extends Account {
+    public ParkingAttendant(String userName, String password, Person person, AccountStatus status) {
+        super(userName, password, person, status);
+    }
 
-    def add_exit_panel(self, exit_panel):
-        None
+    public void processTicket(String ticketNumber) {
+        // Implementation for processing ticket
+    }
+}
 
-
-class ParkingAttendant(Account):
-    def __init__(self, user_name, password, person, status=AccountStatus.Active):
-        super().__init__(user_name, password, person, status)
-
-    def process_ticket(self, ticket_number):
-        None
 
 
 ```
@@ -200,52 +282,71 @@ class ParkingAttendant(Account):
 **ParkingSpot:** Here is the definition of ParkingSpot and all of its children classes:
 
 ```python
-from abc import ABC
-from .constants import  *
+public enum ParkingSpotType {
+    HANDICAPPED,
+    COMPACT,
+    LARGE,
+    MOTORBIKE,
+    ELECTRIC
+}
 
+public abstract class ParkingSpot {
+    private int number;
+    private boolean isFree;
+    private Vehicle vehicle;
+    private ParkingSpotType parkingSpotType;
 
-class ParkingSpot(ABC):
-    def __init__(self, number, parking_spot_type):
-        self.__number = number
-        self.__free = True
-        self.__vehicle = None
-        self.__parking_spot_type = parking_spot_type
+    public ParkingSpot(int number, ParkingSpotType parkingSpotType) {
+        this.number = number;
+        this.isFree = true;
+        this.vehicle = null;
+        this.parkingSpotType = parkingSpotType;
+    }
 
-    def is_free(self):
-        return self.__free
+    public boolean isFree() {
+        return isFree;
+    }
 
-    def assign_vehicle(self, vehicle):
-        self.__vehicle = vehicle
-        self.__free = False
+    public void assignVehicle(Vehicle vehicle) {
+        this.vehicle = vehicle;
+        this.isFree = false;
+    }
 
-    def remove_vehicle(self):
-        self.__vehicle = None
-        self.free = True
+    public void removeVehicle() {
+        this.vehicle = null;
+        this.isFree = true;
+    }
+}
 
+public class HandicappedSpot extends ParkingSpot {
+    public HandicappedSpot(int number) {
+        super(number, ParkingSpotType.HANDICAPPED);
+    }
+}
 
-class HandicappedSpot(ParkingSpot):
-    def __init__(self, number):
-        super().__init__(number, ParkingSpotType.HANDICAPPED)
+public class CompactSpot extends ParkingSpot {
+    public CompactSpot(int number) {
+        super(number, ParkingSpotType.COMPACT);
+    }
+}
 
+public class LargeSpot extends ParkingSpot {
+    public LargeSpot(int number) {
+        super(number, ParkingSpotType.LARGE);
+    }
+}
 
-class CompactSpot(ParkingSpot):
-    def __init__(self, number):
-        super().__init__(number, ParkingSpotType.COMPACT)
+public class MotorbikeSpot extends ParkingSpot {
+    public MotorbikeSpot(int number) {
+        super(number, ParkingSpotType.MOTORBIKE);
+    }
+}
 
-
-class LargeSpot(ParkingSpot):
-    def __init__(self, number):
-        super().__init__(number, ParkingSpotType.LARGE)
-
-
-class MotorbikeSpot(ParkingSpot):
-    def __init__(self, number):
-        super().__init__(number, ParkingSpotType.MOTORBIKE)
-
-
-class ElectricSpot(ParkingSpot):
-    def __init__(self, number):
-        super().__init__(number, ParkingSpotType.ELECTRIC)
+public class ElectricSpot extends ParkingSpot {
+    public ElectricSpot(int number) {
+        super(number, ParkingSpotType.ELECTRIC);
+    }
+}
 
 
 ```
